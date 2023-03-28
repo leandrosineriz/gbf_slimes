@@ -6,6 +6,7 @@ loop = 0 #loop
 running_start = time.time() #start of script
 time_inic = time.time() #counter
 reload = "f5" #reload button
+reload_count = 0 #reload counter
 x, y = -1, -1 #position variables
 while True:
     if k == 1:
@@ -33,9 +34,9 @@ while True:
         except:
             #Search Potion use button
             try:
-                item_loc = py.locateOnScreen("resources/potion.PNG" , confidence=0.9)
-                x, y = py.locateCenterOnScreen("resources/potion_use.PNG" , region=(item_loc.left, item_loc.top, item_loc.width, item_loc. height) , confidence=0.9)
-                py.click(x, y)
+                #item_loc = py.locateOnScreen("resources/potion.PNG" , confidence=0.9)
+                x, y = py.locateCenterOnScreen("resources/potion.PNG" , confidence=0.9)
+                py.click(x, y+150)
                 time_inic = time.time()
                 continue
             except:
@@ -93,15 +94,16 @@ while True:
     
     #validates image found and does the click on position x, y
     if  x != -1 and y != -1:
-        #Reload timer
+        #Reload timer and reload count
         time_inic = time.time()
+        reload_count = 0
         #Reload loop
         if k == 10:
             k = 1
             continue
         #delay before gran
         if k == 4:
-            time.sleep(0)
+            time.sleep(1)
         #delay before narmaya 
         elif k == 7:
             time.sleep(2)
@@ -125,6 +127,11 @@ while True:
         #Rollback to saraza's turn
         elif k < 9:
             k = 7
+        
+        #If reload more than 3 times without cliking start from step 1
+        if reload_count > 3:
+            k = 1
+        
         #Reloads
         #Search bookmark and clicks
         try:
@@ -135,4 +142,5 @@ while True:
             x, y = -1, -1
         py.press(reload)
         time.sleep(2)
-        time_inic = time.time()
+        time_inic = time.time() #reload timer
+        reload_count += 1 #Add to reload counter
